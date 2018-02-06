@@ -32,4 +32,5 @@ public class CartTest {
 
         driver.findElement(By.xpath("//p[@class='special-price']//span[@class='price'])")).getText();
 
+
 }}
