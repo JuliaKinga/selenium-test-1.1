@@ -1,6 +1,7 @@
 package org.fasttrackit.search;
 
 import org.fasttrackit.AppConfig;
+import org.fasttrackit.TestBase;
 import org.fasttrackit.webview.Header;
 import org.fasttrackit.webview.ProductsGrid;
 import org.junit.Test;
@@ -17,14 +18,11 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class SimpleSearchTest {
+public class SimpleSearchTest extends TestBase{
     @Test
 
     public void simpleSearchWithOneKeyword(){
-        System.setProperty("webdriver.chrome.driver", AppConfig.getChromeDriverPatch());
-        WebDriver driver = new ChromeDriver();
 
-        driver.get(AppConfig.getSiteUrl());
         String keyword = "vase";
 
         Header header = PageFactory.initElements(driver, Header.class);
@@ -41,11 +39,17 @@ public class SimpleSearchTest {
                     containsString(keyword.toUpperCase()));}
 
         List<WebElement>swatchLink = driver.findElements(By.cssSelector(".swatch-link[title ='black']"));
-        System.out.println("Changed color.");
+        System.out.println("Changed color.");}
+
+    @Test
+    public void specialPriceDisplayedAfterSimpleSearch(){
+
+        driver.findElement(By.id("search")).sendKeys("vase" + Keys.ENTER);
+
+        driver.findElement(By.xpath("//p[@class='special-price']//span[@class='price'])")).getText();
 
 
-        }
-    }
+    }}
 
 
 
