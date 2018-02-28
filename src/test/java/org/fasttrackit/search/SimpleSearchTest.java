@@ -1,5 +1,8 @@
 package org.fasttrackit.search;
 
+import org.fasttrackit.AppConfig;
+import org.fasttrackit.webview.Header;
+import org.fasttrackit.webview.ProductsGrid;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -7,6 +10,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.internal.KeysRelatedAction;
+import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
@@ -17,29 +21,31 @@ public class SimpleSearchTest {
     @Test
 
     public void simpleSearchWithOneKeyword(){
-        System.setProperty("webdriver.chrome.driver", "C:\\webdrive\\chromedriver.exe" );
+        System.setProperty("webdriver.chrome.driver", AppConfig.getChromeDriverPatch());
         WebDriver driver = new ChromeDriver();
 
-        driver.get("https://fasttrackit.org/selenium-test/");
+        driver.get(AppConfig.getSiteUrl());
         String keyword = "vase";
 
-     driver.findElement(By.id("search")).sendKeys(keyword + Keys.ENTER);
+        Header header = PageFactory.initElements(driver, Header.class);
+
+     header.getSearchField().sendKeys(keyword + Keys.ENTER);
         System.out.println("Pressed Enter in search field.");
 
-        List<WebElement> productNames = driver.findElements(By.cssSelector(".product-name a"));
-        System.out.println("Found" + productNames.size() + "product names");
+        ProductsGrid productsGrid = PageFactory.initElements(driver, ProductsGrid.class);
 
-        for (WebElement nameContainer : productNames) {
+        System.out.println("Found" + productsGrid.getProductNameConstainers().size() + "product names");
+
+        for (WebElement nameContainer : productsGrid.getProductNameConstainers()) {
             assertThat("Some of the products names do not contain the searched keyword", nameContainer.getText(),
-                    containsString(keyword.toUpperCase()));
-        }
+                    containsString(keyword.toUpperCase()));}
+
         List<WebElement>swatchLink = driver.findElements(By.cssSelector(".swatch-link[title ='black']"));
         System.out.println("Changed color.");
 
 
-
         }
     }
 
-    }
+
 
